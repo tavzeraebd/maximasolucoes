@@ -25,28 +25,6 @@ maxsolucoes/
 ## 📟 Conteúdo
 
 ### 📦 MaxPedidos  
-- Automatizações de pedidos
-- Integração com ERP Winthor
-- Testes de API e coleta de dados
-
 ### 📊 MaxGestão  
-- Relatórios de desempenho
-- Scripts de análise em Python
-- Conexão com Google Sheets
-
 ### 📍 MaxRoteirizador  
-- Simulações de rotas
-- Cálculo de distâncias e tempos
-- Testes com algoritmos de otimização
-
 ---
-
-## 🚀 Como usar com Codespaces
-
-1. Clique no botão verde **`Code`**
-2. Selecione **`Codespaces > Create codespace on main`**
-3. O ambiente será preparado com base nesta estrutura
-
----
-
-> Este repositório é de uso pessoal, não possui vínculo com a empresa Máxima Soluções.
