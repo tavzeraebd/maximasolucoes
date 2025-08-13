@@ -66,8 +66,9 @@ def autenticar_maxima():
 
     url = "https://intext-04.solucoesmaxima.com.br:81/api/v1/Login"
     payload = {
-        "username": os.getenv("username-maxima"),
-        "password": os.getenv("password-maxima")
+        "grant_type": "client_credentials",
+        "username": os.getenv("username-winthor"),
+        "password": os.getenv("password-winthor")
     }
 
     try:
