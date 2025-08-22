@@ -23,6 +23,7 @@ def autenticar_winthor():
 
     url = "https://api.ebdgrupo.com.br/oauth2/v1/access-token"
     payload = {
+        "grant_type": "client_credentials",
         "username": os.getenv("username-winthor"),
         "password": os.getenv("password-winthor")
     }
