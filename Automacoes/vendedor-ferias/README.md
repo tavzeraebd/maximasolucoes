@@ -21,7 +21,7 @@ Este sistema realiza a sincronização automática de dados de férias de vended
 
 ```bash
 git clone <url-do-repositorio>
-cd vendedor-ferias
+cd Automacoes/vendedor-ferias
 ```
 
 ### 2. Instale as dependências
@@ -36,7 +36,7 @@ pip install -r requirements.txt
 
 ### 3. Configure as variáveis de ambiente
 
-Copie o arquivo `env.example` para `.env` na raiz do diretório `vendedor-ferias`:
+Copie o arquivo `env.example` para `.env`:
 
 ```bash
 cp env.example .env
@@ -65,13 +65,12 @@ API_TIMEOUT=30
 
 ```
 vendedor-ferias/
-├── python/
-│   ├── vendedor-ferias-v1.py    # Script principal
-│   └── config.py                 # Configurações centralizadas
-├── env.example                   # Template de configuração
-├── requirements.txt              # Dependências Python
-├── .gitignore                   # Arquivos ignorados pelo Git
-└── README.md                     # Este arquivo
+├── vendedor-ferias-v1.py    # Script principal
+├── config.py                 # Configurações centralizadas
+├── env.example               # Template de configuração
+├── requirements.txt          # Dependências Python
+├── .gitignore               # Arquivos ignorados pelo Git
+└── README.md                # Este arquivo
 ```
 
 ## 🔧 Configuração
@@ -94,7 +93,6 @@ vendedor-ferias/
 ### Execução Manual
 
 ```bash
-cd python
 python vendedor-ferias-v1.py
 ```
 
@@ -107,8 +105,8 @@ python vendedor-ferias-v1.py
    - **Gatilho**: Conforme necessário (ex: diariamente)
    - **Ação**: Executar programa
    - **Programa**: `python.exe` (ou caminho completo)
-   - **Argumentos**: `C:\caminho\para\vendedor-ferias\python\vendedor-ferias-v1.py`
-   - **Diretório inicial**: `C:\caminho\para\vendedor-ferias\python`
+   - **Argumentos**: `C:\caminho\para\Automacoes\vendedor-ferias\vendedor-ferias-v1.py`
+   - **Diretório inicial**: `C:\caminho\para\Automacoes\vendedor-ferias`
 4. Configure conta de usuário com acesso às APIs
 
 ## 📊 Como Funciona

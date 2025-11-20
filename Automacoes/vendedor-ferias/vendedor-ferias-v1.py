@@ -122,3 +122,4 @@ if __name__ == "__main__":
     except Exception as e:
         log(f"Erro inesperado: {e}", "ERRO")
         sys.exit(1)
+
