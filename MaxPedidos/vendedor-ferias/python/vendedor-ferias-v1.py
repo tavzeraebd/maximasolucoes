@@ -1,10 +1,11 @@
-import os
 import sys
 import requests
-from dotenv import load_dotenv
-
-# Carrega variáveis do arquivo .env
-load_dotenv()
+from config import (
+    USERNAME_WINTHOR, PASSWORD_WINTHOR,
+    WINTHOR_OAUTH_URL, WINTHOR_VENDEDOR_FERIAS_URL,
+    MAXIMA_LOGIN_URL, MAXIMA_FERIAS_URL,
+    API_TIMEOUT, validar_configuracao
+)
 
 # ===== Função para exibir mensagens de log =====
 def log(mensagem, tipo="INFO"):
@@ -21,15 +22,14 @@ def log(mensagem, tipo="INFO"):
 def autenticar_winthor():
     log("Iniciando autenticação na API Winthor...")
 
-    url = "https://api.ebdgrupo.com.br/oauth2/v1/access-token"
     payload = {
         "grant_type": "client_credentials",
-        "username": os.getenv("username-winthor"),
-        "password": os.getenv("password-winthor")
+        "username": USERNAME_WINTHOR,
+        "password": PASSWORD_WINTHOR
     }
 
     try:
-        response = requests.post(url, data=payload)
+        response = requests.post(WINTHOR_OAUTH_URL, data=payload, timeout=API_TIMEOUT)
         if response.status_code == 200:
             dados = response.json()
             access_token = dados.get("access_token")
@@ -46,11 +46,10 @@ def autenticar_winthor():
 def obter_vendedores_ferias(access_token):
     log("Consultando vendedores de férias na API Winthor...")
 
-    url = "https://api.ebdgrupo.com.br/maxima/vendedor-ferias"
     headers = {"Authorization": f"Bearer {access_token}"}
 
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(WINTHOR_VENDEDOR_FERIAS_URL, headers=headers, timeout=API_TIMEOUT)
         if response.status_code == 200:
             vendedores = response.json()
             log(f"Foram encontrados {len(vendedores)} registros de férias.", "OK")
@@ -65,15 +64,14 @@ def obter_vendedores_ferias(access_token):
 def autenticar_maxima():
     log("Iniciando autenticação na API Máxima...")
 
-    url = "https://intext-04.solucoesmaxima.com.br:81/api/v1/Login"
     payload = {
         "grant_type": "client_credentials",
-        "username": os.getenv("username-winthor"),
-        "password": os.getenv("password-winthor")
+        "username": USERNAME_WINTHOR,
+        "password": PASSWORD_WINTHOR
     }
 
     try:
-        response = requests.post(url, json=payload)
+        response = requests.post(MAXIMA_LOGIN_URL, json=payload, timeout=API_TIMEOUT)
         if response.status_code == 200:
             dados = response.json()
             log(dados.get("resposta", "Sem resposta"), "OK")
@@ -90,14 +88,13 @@ def autenticar_maxima():
 def atualizar_ferias_maxima(token_maxima, vendedores):
     log("Enviando dados de férias para API Máxima...")
 
-    url = "https://intext-04.solucoesmaxima.com.br:81/api/v1/FeriasVendedor/Atualizar"
     headers = {"Authorization": f"Bearer {token_maxima}"}
 
     for vendedor in vendedores:
         payload = [vendedor]
         log(f"Enviando férias do vendedor {vendedor['codigoVendedorErp']}...")
         try:
-            response = requests.post(url, json=payload, headers=headers)
+            response = requests.post(MAXIMA_FERIAS_URL, json=payload, headers=headers, timeout=API_TIMEOUT)
             if response.status_code == 200:
                 log(f"Registro enviado com sucesso: {response.text}", "OK")
             else:
@@ -107,11 +104,21 @@ def atualizar_ferias_maxima(token_maxima, vendedores):
 
 # ===== Execução principal =====
 if __name__ == "__main__":
-    log("===== INÍCIO DO PROCESSO =====", "FIM")
+    try:
+        # Valida configurações antes de iniciar
+        validar_configuracao()
+        
+        log("===== INÍCIO DO PROCESSO =====", "FIM")
 
-    token_winthor = autenticar_winthor()
-    vendedores_ferias = obter_vendedores_ferias(token_winthor)
-    token_maxima = autenticar_maxima()
-    atualizar_ferias_maxima(token_maxima, vendedores_ferias)
+        token_winthor = autenticar_winthor()
+        vendedores_ferias = obter_vendedores_ferias(token_winthor)
+        token_maxima = autenticar_maxima()
+        atualizar_ferias_maxima(token_maxima, vendedores_ferias)
 
-    log("===== PROCESSO FINALIZADO =====", "FIM")
+        log("===== PROCESSO FINALIZADO =====", "FIM")
+    except ValueError as e:
+        log(f"Erro de configuração: {e}", "ERRO")
+        sys.exit(1)
+    except Exception as e:
+        log(f"Erro inesperado: {e}", "ERRO")
+        sys.exit(1)
